@@ -3,9 +3,7 @@ title: "Data Science Capstone Milestone Report:"
 subtitle: "Exploratory Analysis of the SwiftKey data"
 author: "Vitor Dantas"
 date: "10/7/2019"
-output:
-  html_document:
-    keep_md: yes
+output: html_document
 ---
 
 ```{r echo=FALSE,message=FALSE}
