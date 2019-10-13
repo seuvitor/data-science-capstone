@@ -18,8 +18,6 @@ downloadDataset <- function() {
     }
 }
 
-#===============================================================================
-
 # Function to get all the texts from the SwiftKey raw text dataset, scrambled.
 getFullCorpusPermutation <- function() {
     lines <- character()
