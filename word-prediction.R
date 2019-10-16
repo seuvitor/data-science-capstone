@@ -20,9 +20,9 @@ predictNextWord <- (function() {
   nGramModel <- fread(file = 'word-prediction-dataset-with-prediction-trimmed.csv',
                       colClasses = c("integer", "character", "numeric", "character"))
   setkey(nGramModel, nGramSize, feature)
+  numWordsPredicted <- 5
   
   function (previousWords) {
-    
     input <- preprocessInput(previousWords)
     if (length(input) > 4) {
       last4Words <- paste(input[(length(input) - 3):length(input)], collapse = " ")
@@ -34,7 +34,7 @@ predictNextWord <- (function() {
         candidateInputSize <- length(input) - i
         
         likelyNextWords <- if (candidateInputSize == 0) {
-          head(nGramModel[nGramSize == 1, feature, keyby=-score]$feature, 3)
+          head(nGramModel[nGramSize == 1, feature, keyby=-score]$feature, numWordsPredicted)
         } else {
           candidateInput <- input[(length(input) - candidateInputSize + 1):length(input)]
           candidateInputCollapsed <- paste0(candidateInput, collapse = " ")
@@ -49,16 +49,16 @@ predictNextWord <- (function() {
           }
         }
         for (word in likelyNextWords) {
-          if (all(!grepl(word, candidateWords$feature))) {
+          if (all(!grepl(paste0("\\b", word, "\\b"), candidateWords$feature))) {
             candidateWords <- rbind(candidateWords,
                                     data.frame(feature = word, score = 0))
           }
         }
-        if (nrow(candidateWords) >= 3) {
+        if (nrow(candidateWords) >= numWordsPredicted) {
           break
         }
       }
-      candidateWords[1:3, ]
+      candidateWords[1:numWordsPredicted, ]
     }
   }
 })()
