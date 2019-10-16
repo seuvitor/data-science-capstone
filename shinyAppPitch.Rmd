@@ -1,0 +1,63 @@
+---
+title: "Smart Typing Machine Shiny App"
+author: "Vitor Dantas"
+date: "10/16/2019"
+output: ioslides_presentation
+---
+
+## Smart Typing Machine
+
+This Shiny app was built for the Coursera/Johns Hopkins Data Science Capstone to showcase the
+habilities learned in the program.
+
+The app presents to you an "omnibox" where you can start typing, and it will help you:
+
+- at all times it will suggest the next word
+- it will autocomplete the word you are typing right now
+
+That way you can type much faster while saving a few keystrokes.
+
+You can also paste in some text just to check the predictions.
+
+## Under the hood (1/2)
+
+A simple app, but its predictions are based on a powerful 5-gram probabilistic model, built from the
+Coursera/SwiftKey dataset containing thousands of tweets, blog posts and news articles.
+
+Upon this model, we implemented a Stupid Backoff-type algorithm:
+
+- Given the last 4 words, the algorithm looks for the most frequent 5-grams starting with such words
+- If it can't find them, we use the last 3 words to predict from the 4-grams
+- And so on if it keeps failing until predicting by the frequency of single words as a last resort.
+
+## Under the hood (2/2)
+
+We pre-computed the 5 most likely next words for each known n-gram and stored in the model, for
+an improved response time in our application. Here are our results from a popular benchmark on the
+discussion forums:
+
+```{r eval=FALSE}
+Overall top-3 score:     17.60 %
+Overall top-1 precision: 13.18 %
+Overall top-3 precision: 21.47 %
+Average runtime:         27.07 msec
+Number of predictions:   28464
+Total memory used:       1.38 MB
+
+Dataset details
+ Dataset "blogs" (599 lines, 14587 words, hash 14b3c593e543eb8b2932cf00b646ed653e336897a03c82098b725e6e1f9b7aa2)
+  Score: 17.37 %, Top-1 precision: 12.88 %, Top-3 precision: 21.35 %
+ Dataset "tweets" (793 lines, 14071 words, hash 7fa3bf921c393fe7009bc60971b2bb8396414e7602bb4f409bed78c7192c30f4)
+  Score: 17.83 %, Top-1 precision: 13.47 %, Top-3 precision: 21.59 %
+```
+
+## Sample results
+
+For a little demonstration of the working app, look at the suggestions after you type
+"cousera is the"...
+
+![](smart-typing-machine-screenshot.png)
+
+Enjoy the app!
+
+https://vitorcd.shinyapps.io/smart-typing-machine/
